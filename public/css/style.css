@@ -1,6 +1,9 @@
 body {
     padding: 0;
     margin: 0;
+    background-image: url('/images/topography.svg');
+    background-repeat:repeat;
+    background-color: #F2F5FF;
 }
 
 .body {
@@ -13,25 +16,27 @@ body {
 }
 
 .header {
-    background-color: rgb(34, 42, 54);
+    width: 300px;
+    height: 100%;
     border-bottom: 2px solid rgb(77, 152, 223);
-}
-
-.header_item {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    margin-right: 20px;
-    gap: 30px;
+    background-color: white;
 }
 
 .header_item-list {
     display: flex;
+    justify-content: start;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.header_item {
+    display: flex;
+    flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    padding: 0 10px;
-    min-height: 70px;
+    margin-right: 20px;
+    gap: 30px;
 }
 
 .header_item-link {

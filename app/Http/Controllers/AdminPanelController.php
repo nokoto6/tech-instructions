@@ -11,6 +11,9 @@ use Illuminate\Http\Request;
 
 class AdminPanelController extends Controller
 {
+    public function panel(Request $request) {
+        return redirect('/admin-panel/instructions');
+    }
     public function instructions(Request $request) {
         if(Auth::user() && Auth::user()->is_admin) {
             $max_items = 20;

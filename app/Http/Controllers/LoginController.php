@@ -57,7 +57,7 @@ class LoginController extends Controller
             
             if(Auth::user() && Auth::user()->is_admin) {
                 if($request->is_admin) {
-                    $data['is_admin'] = true;
+                    $data['is_admin'] = true; // для админ панели - создание пользователя, чекбокс с правами админа
                 }
             }
 
@@ -85,11 +85,13 @@ class LoginController extends Controller
             return redirect('login')->withErrors(['message' => 'Пройдите капчу!']); 
         }; // ^ проверка капчи, без валидатора, имхо для нормальной валидации каптча просит SSL сертификат
 
-        if(User::where(['email' => $request->input('email')])->get()->isEmpty()) { // ищем есть ли такие Имейлы
+        $getUser = User::where(['email' => $request->input('email')])->get();
+
+        if($getUser->isEmpty()) { // ищем есть ли такие Имейлы
             return redirect('login')->withErrors(['message' => 'Пользователя с таким E-Mail не существует']); 
         }
 
-        if(User::where(['email' => $request->input('email')])->get()->first()->blocked) {
+        if($getUser->first()->blocked) {
             return redirect('login')->withErrors(['message' => 'Вы были заблокированны администрацией!']); 
         }
 

@@ -27,6 +27,7 @@ Route::post('/instruction/create', [InstructionsController::class, 'create'])->n
 Route::post('/instruction/delete', [InstructionsController::class, 'delete'])->name('instruction-delete');
 Route::post('/instruction/accept', [InstructionsController::class, 'accept'])->name('instruction-accept');
 
+Route::get('/admin-panel', [AdminPanelController::class, 'panel'])->name('admin-panel');
 Route::get('/admin-panel/instructions', [AdminPanelController::class, 'instructions'])->name('admin-instructions');
 Route::get('/admin-panel/users', [AdminPanelController::class, 'users'])->name('admin-users');
 Route::get('/admin-panel/complaints', [AdminPanelController::class, 'complaints'])->name('admin-complaints');
