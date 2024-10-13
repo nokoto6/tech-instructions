@@ -2,32 +2,40 @@
 @media (max-width: 1500px) {
     body {
         width: auto;
+        padding-top: 40px;
     }
 
-    .instruction-list {
+    .main-title {
+        padding-bottom: 0;
+    }
+
+    .instruction-list, .category-list {
         grid-template-columns: repeat(3, 1fr);
     }
 }
 
 @media (max-width: 1280px) {
-    .instruction-list {
+    .instruction-list, .category-list {
         grid-template-columns: repeat(2, 1fr);
     }
 
 }
 
 @media (max-width: 1023px) {
-    .instruction-list {
+    .instruction-list, .category-list {
         grid-template-columns: repeat(2, 1fr);
     }
 
 }
 
 @media (max-width: 850px) {
-    .instruction-list {
+    .instruction-list, .category-list {
         grid-template-columns: repeat(1, 1fr);
     }
 
+    body {
+        padding-top: 20px;
+    }
 }
 
 @media (max-width: 560px) {
@@ -36,12 +44,19 @@
         padding: 0;
     }
 
+    .main-title {
+        padding: 0;
+        text-align: center;
+        font-size: 30px;
+        padding-bottom: 5px;
+    }
+
     .body {
         margin-left: 0;
         border-left: none;
         padding-left: 0;
         padding: 0 10px;
-        padding-top: 60px;
+        padding-top: 70px;
     }
 
     .header {
@@ -75,4 +90,28 @@
         justify-content: start;
         align-items: center;
     }
+
+    .overlay_transition {
+        height: 100%;
+        width: 100%;
+        transition: background-color 0.5s;
+    }
+
+    .overlay_active {
+        height: 100%;
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+    }
+
+    .user__container {
+        margin-top: 20px;
+    }
+}
+
+@media (max-height: 560px) {
+    .header__item-link {
+        padding: 5px 0;
+        line-height: 20px;
+    }
+
 }

@@ -15,7 +15,9 @@ body {
     'FILL' 1,
     'wght' 400,
     'GRAD' 0,
-    'opsz' 30
+    'opsz' 30;
+
+    user-select: none;
 }
 
 a {
@@ -24,19 +26,19 @@ a {
 }
 
 .body {
-    margin-left: 210px;
-    border-left: 2px solid rgba(0, 0, 0, 0.2);
+    margin-left: 240px;
     padding-left: 25px;
 }
 
 .header {
-    z-index: 4;
+    z-index: 101!important;
     width: 210px;
     position: fixed;
 }
 
 .main-title {
     margin: 0;
+    padding-bottom: 10px;
 }
 
 .header__item {
@@ -51,12 +53,17 @@ a {
     color: #5956EB!important;
 }
 
+.header__item:hover {
+    transform: scale(1.05);
+}
+
 .header__item-link {
     display: flex;
-    gap: 10px;
+    gap: 15px;
     align-items: center;
     line-height: 32px;
-    margin: 0 10px;
+    margin-left: 5px;
+    margin-right: 10px;
 
     padding: 10px 0;
 }
@@ -76,13 +83,10 @@ a {
     margin-left: 20px;
 }
 
-.header__item:hover:hover {
-    transform: scale(1.05);
-}
 
 .top-header-phone {
     display: none;
-    z-index: 5;
+    z-index: 105;
 }
 
 .burger {
@@ -137,7 +141,7 @@ a {
 
 .instruction-item {
     min-width: 280px;
-    max-width: 450px;
+    max-width: 550px;
     flex-grow: 1;
 
     padding: 10px 13px;
@@ -147,6 +151,7 @@ a {
 }
 
 .instruction-item__symbol-container {
+    height: 100%;
     min-width: 50px;
     display: flex;
     justify-content: right;
@@ -206,7 +211,7 @@ a {
     background-repeat: no-repeat;
     background-size: 16px;
 
-    max-width: 350px;
+    max-width: 450px;
     min-width: 280px;
     width: 100%;
 }
@@ -217,6 +222,37 @@ a {
 
 .search-form {
     margin-bottom: 10px;
+    max-width: 450px;
+}
+
+.search-form-container {
+    display: flex;
+    gap: 7px;
+}
+
+.search-categories-button__container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: gray;
+    margin-right: 3px;
+    transition: transform 0.5s;
+    user-select: none;
+    z-index: 0;
+}
+
+.search-categories-button__container:hover {
+    color: rgb(97, 97, 97);
+    cursor: pointer;
+}
+
+.search-categories-button__container_active {
+    color:#5956EB;
+    transform: rotate(90deg) scale(1.2);
+}
+
+.search-categories-button__container_active:hover {
+    color:#3e3ca3;
 }
 
 .instruction-list_count {
@@ -227,7 +263,7 @@ a {
 }
 
 .paginate_container {
-    margin: 30px 0;
+    margin: 20px 0;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -272,3 +308,332 @@ a {
     font-size: 16px;
 }
 
+.paginate-dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.overlay {
+    position: fixed;
+    z-index: 100;
+    height: 0;
+    width: 0;
+    left: 0;
+    top: 0;
+}
+
+.category-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    justify-content: start;
+    gap: 10px;
+}
+
+.category-item {
+    min-width: 280px;
+    max-width: 550px;
+    flex-grow: 1;
+}
+
+.category-item__link {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 10px 13px;
+}
+
+.category-item__link:hover .category-item__text, .category-item__link:hover .category-item__arrow {
+    color: rgb(36, 36, 36);
+}
+
+.category-item__symbol-container, .category-item__arrow-container {
+    display: flex;
+    align-items: center;
+}
+
+.category-item__symbol {
+    font-size: 30px!important;
+    color: #5956EB;
+}
+
+.category-item__link:hover .category-item__symbol {
+    font-size: 30px!important;
+    color: #5956EB;
+}
+
+.category-item__text {
+    color: rgb(87, 87, 87);
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.category-item__arrow-container {
+    margin-left: auto;
+}
+
+.select-container {
+    margin-top: 0px;
+    margin-left: auto;
+    flex-direction: row;
+    justify-content: end;
+    align-items: center;
+    gap: 10px;
+    transform: scaleY(0);
+    height: 0;
+    opacity: 0;
+    transition: opacity 0.3s, transform 0.5s;
+    display: flex;
+}
+
+.select-container_active {
+    width: auto;
+    height: auto;
+    margin-top: 5px;
+    transform: scaleY(1);
+    opacity: 1;
+}
+
+.select-container_transition {
+    margin-top: 5px;
+    height: auto;
+    transform: scaleY(0);
+}
+
+.custom-select {
+    z-index: -1;
+    position: relative;
+    max-width: 200px;
+    min-width: 150px;
+}
+
+.custom-select select {
+    display: none; /*hide original SELECT element: */
+}
+
+.select-selected {
+    background-color: white;
+    border-radius: 7px;
+    box-shadow: 0 2px 5px 1px rgba(0, 0, 0, 0.160);
+}
+
+/* Style the arrow inside the select element: */
+.select-selected:after {
+    position: relative;
+    content: "";
+    top: 14px;
+    right: 10px;
+    width: 0;
+    height: 0;
+    border: 6px solid transparent;
+}
+
+/* Point the arrow upwards when the select box is open (active): */
+.select-selected.select-arrow-active:after {
+  top: 7px;
+}
+
+/* style the items (options), including the selected item: */
+.select-items div,.select-selected {
+    color: #646464;
+    padding-left: 5px;
+    border: 1px solid transparent;
+    border-color: transparent transparent rgba(0, 0, 0, 0.1) transparent;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 24px;
+}
+
+.select-selected {
+    color: #646464;
+    font-weight: bold;
+}
+
+/* Style items (options): */
+.select-items {
+    position: absolute;
+    background-color: rgb(245, 245, 245);
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 1;
+}
+
+/* Hide the items when the select box is closed: */
+.select-hide {
+    display: none;
+}
+
+.select-items div:hover, .same-as-selected {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.select-label {
+    color:#5956EB;
+    font-size: 14px;
+}
+
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 450px;
+    gap: 20px;
+    padding: 0 28px;
+}
+
+.cute-input-text__container {
+    position: relative;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.cute-input-text__input {
+    border: none;
+    background: none!important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.263);
+    width: 100%;
+    font-size: 16px;
+    color: rgb(73, 73, 73);
+}
+
+.cute-input-text__textarea {
+    border: 1px solid gray;
+    background: none!important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.263);
+    width: 100%;
+    font-size: 16px;
+    color: rgb(73, 73, 73);
+    height: 130px;
+    resize: none;
+    padding: 5px;
+}
+
+.cute-input-text__textarea-label {
+    position: absolute;
+    user-select: none;
+    font-size: 16px;
+    color: rgb(158, 158, 158);
+    transform: translateY(-25px);
+}
+
+.cute-input-text__label {
+    position: absolute;
+    user-select: none;
+    transition: transform 0.5s ease, color 0.5s ease;
+    font-size: 16px;
+    color: rgb(158, 158, 158);
+    transform: translateY(-5px);
+}
+
+.cute-input-text__label:hover {
+    cursor:text;
+}
+
+.cute-input-text__label_active {
+    transform: translateY(-30px);
+    color: rgb(105, 105, 105);
+}
+
+.cute-input-text__label_active .required {
+    color:#5956EB;
+}
+
+.required {
+    display: inline;
+    color: rgb(105, 105, 105);
+}
+
+.margin-bottom-20 {
+    margin-bottom: 20px;
+}
+
+.margin-bottom-30 {
+    margin-bottom: 30px;
+}
+
+.invalid-feedback {
+    font-size: 14px;
+    color: #eb5656;
+    width: 100%;
+    list-style-position: inside;
+    padding: 0;
+}
+
+.invalid-feedback_hint {
+    color:#5956EB;
+}
+
+.cute-button-form {
+    border: none;
+    color: white;
+    font-size: 18px;
+    background-color: #5956EB;
+    
+    border-radius: 15px;
+    box-shadow: 0 2px 5px 1px rgba(0, 0, 0, 0.160);
+    padding: 10px;
+    width: 100%;
+    transition: transform 0.1s ease;
+    transform: scale(1);
+}
+
+.cute-button-form:hover {
+    background-color:#3e3ca3;
+}
+
+.cute-button-form:active {
+    transform: scale(0.95);
+}
+
+.cute-link-text {
+    font-size: 16px;
+    color:#5956eb!important;;
+}
+
+.cute-link-text:hover {
+    color:#3e3ca3!important;
+}
+
+.user__container {
+    display: flex;
+    margin-left: 15px;
+    margin-top: 2px;
+    margin-bottom: 10px;
+    line-height: 35px;
+    transition: transform 0.2s;
+    color: rgb(82, 82, 82);
+}
+
+.user__container:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+}
+
+.user__logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+}
+
+.user__name {
+    margin-left: 12px;
+    margin-right: 15px;
+    user-select: none;
+    font-size: 18px;
+    
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    text-transform: capitalize;
+}

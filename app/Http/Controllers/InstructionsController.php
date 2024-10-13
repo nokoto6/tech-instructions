@@ -12,7 +12,7 @@ class InstructionsController extends Controller {
     public function list(Request $request) {
         if(!Instructions::count()) { return view('body'); }
 
-        $max_items = 25;
+        $max_items = 20;
 
         $search = $request->search;
         $page = $request->page;

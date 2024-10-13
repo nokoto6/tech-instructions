@@ -5,6 +5,16 @@
 	box-sizing: border-box;
 }
 
+input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+textarea:focus, input:focus{
+    outline: none;
+}
+
 body {
 	font-family: 'Open Sans', sans-serif;
 	line-height: 1.75em;

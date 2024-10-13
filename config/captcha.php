@@ -76,7 +76,7 @@ return [
     | Supported: "light", "dark"
     |
     */
-    'theme' => env('CAPTCHA_THEME', 'dark'),
+    'theme' => env('CAPTCHA_THEME', 'light'),
 
     /*
     |------------------------------------------------------------

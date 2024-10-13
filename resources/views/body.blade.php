@@ -21,15 +21,6 @@
         </div>
     </div>
 
-    <script>
-        const mainTitleElement = document.querySelector('.main-title');
-        if(mainTitleElement) {
-            const mainTitleText = mainTitleElement.textContent;
-            const mainTitlePhoneElement = document.querySelector('.main-title-phone');
-            if(mainTitlePhoneElement) {
-                mainTitlePhoneElement.textContent = mainTitleText;
-            } 
-        } 
-    </script>
+    <script src="/js/header.js"></script>
 </body>
 </html>

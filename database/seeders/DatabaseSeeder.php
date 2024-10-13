@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Category;
 use App\Models\Instructions;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -43,6 +44,13 @@ class DatabaseSeeder extends Seeder
                 'email' => 'TestEmail' . $i . '@test.com',
                 'password' => 'testpass',
                 'is_admin' => false
+            ]);
+        }
+
+        for ($i = 0; $i <= 10; $i++) {
+            Category::create([
+                'item_name' => 'CategoryName' . $i,
+                'google_symbol_name' => 'kitchen'
             ]);
         }
     }

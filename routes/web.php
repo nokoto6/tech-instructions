@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\App;
 
 use App\Http\Controllers\AdminPanelController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ComplaintsController;
 use App\Http\Controllers\InstructionsController;
 use App\Http\Controllers\LoginController;
@@ -19,6 +20,8 @@ Route::post('/login', [LoginController::class, 'authentication'])->name('authent
 Route::post('/register', [LoginController::class, 'registerCreate'])->name('registerCreate');
 
 Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+
+Route::get('/categories', [CategoryController::class, 'view'])->name('categories');
 
 Route::get('/instruction-form', [InstructionsController::class, 'form'])->name('instruction-form');
 Route::get('/instruction-view', [InstructionsController::class, 'view'])->name('instruction-view');
