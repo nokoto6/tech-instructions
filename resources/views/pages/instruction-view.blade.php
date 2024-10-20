@@ -50,7 +50,6 @@
 
             <div class="complaints-content">
                 <div class="complaints-header__container">
-                    <span class="complaints-close">&times;</span>
                     <h2 class="complaints-title">Отправить жалобу</h2>
                 </div>
                 <form 
