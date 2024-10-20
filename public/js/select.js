@@ -1,3 +1,4 @@
+const form = document.querySelector('.search-form');
 var x, i, j, l, ll, selElmnt, a, b, c;
 
 x = document.getElementsByClassName("custom-select");
@@ -31,7 +32,7 @@ for (i = 0; i < l; i++) {
                     y = this.parentNode.getElementsByClassName("same-as-selected");
                     yl = y.length;
                     for (k = 0; k < yl; k++) {
-                    y[k].removeAttribute("class");
+                        y[k].removeAttribute("class");
                     }
                     this.setAttribute("class", "same-as-selected");
                     break;
@@ -39,6 +40,7 @@ for (i = 0; i < l; i++) {
             }
 
             h.click();
+            if (form) { form.submit(); } 
         });
         
         b.appendChild(c);

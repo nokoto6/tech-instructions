@@ -24,7 +24,10 @@ function toggleSearchOption() {
         setTimeout(() => searchTransToggle(false), 250);
     }
 
-    if(!toggle) { offSelect(); }
+    if(!toggle) { 
+        offSelect(); 
+        if (form) { form.submit(); } 
+    }
 }
 
 const urlParams = new URLSearchParams(window.location.search);
@@ -33,8 +36,10 @@ const category = urlParams.get('category');
 if(category) {
     hiddenSelect.selectedIndex = category-1;
     
-    let selElmnt = x[0].getElementsByTagName("select")[0];
-    selectSelected.textContent=selElmnt[category-1].text;
+    const templateText = document.querySelector('.categoryTemplate').content.textContent;
+    console.log(templateText);
+
+    selectSelected.textContent=templateText;
 
     toggleSearchOption();
 } else {
@@ -42,5 +47,3 @@ if(category) {
 }
 
 searchGear.addEventListener('click', toggleSearchOption);
-
-

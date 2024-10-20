@@ -18,6 +18,12 @@
 
     $categories = Category::get();
     if( !$categories ) { $categories = []; }
+
+    $categoryName = "";
+
+    if( $category ) {
+        $categoryName = Category::whereKey($category)->get()->first()->item_name;
+    }
 @endphp
 
 @extends("body")
@@ -27,6 +33,8 @@
 @section("content")
     <div class="main-container">
         <h1 class="main-title">Поиск инструкций для техники</h1>
+
+        <template class="categoryTemplate">{{$categoryName}}</template>
 
         <form class="search-form">
             <div class="search-form-container">
@@ -98,23 +106,25 @@
             
             <ul class="cards-list">
                 @foreach($instructions as $item)
-                    <li class="cute-border__template cards-item">
-                        <div class="instruction-item__text-container">
-                            <a href="{{ route('results', ['category' => $item->category_id]) }}" class="instruction-item__text instruction-item__category">
-                                {{ Category::whereKey($item->category_id)->get()->first()->item_name }}
-                            </a>
-                            <span class="instruction-item__text instruction-item__name">
-                                {{$item->item_name}}
-                            </span>
-                            <span class="instruction-item__text instruction-item__description">
-                                {{$item->description}}
-                            </span>
+                    <li class="cute-border__template">
+                        <div class="cards-item" onclick="window.location.href='{{route('instruction-view', ['id'=>$item->id])}}'">
+                            <div class="instruction-item__text-container">
+                                <a href="{{ route('results', ['category' => $item->category_id]) }}" class="instruction-item__text instruction-item__category">
+                                    {{ Category::whereKey($item->category_id)->get()->first()->item_name }}
+                                </a>
+                                <span class="instruction-item__text instruction-item__name">
+                                    {{$item->item_name}}
+                                </span>
+                                <span class="instruction-item__text instruction-item__description">
+                                    {{$item->description}}
+                                </span>
+                            </div>
+                            <div class="instruction-item__symbol-container">
+                                <span class="material-symbols-rounded cute-border__symbol">
+                                    arrow_forward_ios
+                                </span>
+                            </div>
                         </div>
-                        <a href="{{route('instruction-view', ['id'=>$item->id])}}" class="instruction-item__symbol-container">
-                            <span class="material-symbols-rounded cute-border__symbol">
-                                arrow_forward_ios
-                            </span>
-                        </a>
                     </li>
                 @endforeach
             </ul>
