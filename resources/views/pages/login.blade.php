@@ -1,5 +1,7 @@
 @extends("body")
 
+@section('title', 'Авторизация')
+
 @section("content")
     <h1 class="main-title">Авторизация</h1>
     

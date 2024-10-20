@@ -9,6 +9,7 @@ class Category extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'id',
         'item_name',
         'google_symbol_name'
     ];

@@ -1,8 +1,6 @@
-@php
-
-@endphp
-
 @extends("body")
+
+@section('title', 'Категории')
 
 @section("content")
     <h1 class="main-title">Категории</h1>
@@ -11,7 +9,7 @@
         <ul class="category-list">
             @foreach($categories as $item)
                 <li class="cute-border__template category-item">
-                    <a href="/" class="category-item__link">
+                    <a href="{{ route('results', ['category' => $item->id]) }}" class="category-item__link">
                         <div href="" class="category-item__symbol-container">
                             <span class="material-symbols-rounded category-item__symbol">
                                 {{$item->google_symbol_name}}

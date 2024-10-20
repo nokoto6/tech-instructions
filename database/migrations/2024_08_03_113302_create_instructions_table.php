@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('item_name')->reqired();
             $table->string('uploader_id');
-            $table->text('description')->reqired();
+            $table->string('description')->nullable();
+            $table->string('category_id')->reqired();
             $table->string('file');
             $table->boolean('accepted')->default(0);
             $table->timestamp('created_at')->nullable();

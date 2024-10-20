@@ -2,29 +2,34 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use Illuminate\Http\Request;
 use App\Models\Instructions;
+use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\RedirectResponse;
 
 class InstructionsController extends Controller {
-    public function list(Request $request) {
-        if(!Instructions::count()) { return view('body'); }
+    public function results(Request $request) {
+        if(!Instructions::count()) { return view('pages.results'); }
 
-        $max_items = 20;
+        $max_items = 21;
 
         $search = $request->search;
-        $page = $request->page;
 
-        if(isset($search)) {
-            $instructions = Instructions::where('item_name', 'LIKE', '%'. $search .'%')->where(['accepted' => true])
-            ->orWhere('description', 'LIKE', '%'. $search .'%')->where(['accepted' => true]);
-        } else {
-            $instructions = Instructions::where(['accepted' => true]);
+        $query = DB::table('instructions')->where(['accepted' => true]);
+        
+        switch (true) {
+            case isset($request->category);
+                $query->where('category_id', $request->category);
+            case isset($search);
+                $query->where('item_name', 'LIKE', '%'. $search .'%');
         }
 
-        return view('body', ['instructions' => $instructions->paginate($max_items,['*'],'page',$page)]);
+        $result = $query->orderBy('id', 'desc')->paginate($max_items,['*'],'page',$request->page);
+
+        return view('pages.results', ['instructions' => $result]);
     }
     public function form(Request $request) {
         if(Auth::user()) {
@@ -36,12 +41,18 @@ class InstructionsController extends Controller {
     public function create(Request $request):RedirectResponse {
         if(Auth::user()) {
             $validated = $request->validate([
-                'item_name'=>'required|max:30',
-                'description'=>'required|max:255',
-                "file" => "required|mimes:pdf|max:10000"
+                'item_name'=>'required|max:40',
+                'description'=>'max:255',
+                'file' => 'required|mimes:pdf|max:10000',
+                'category_id' => 'required'
             ]);
 
-            $data = $request->only(['item_name','description']);
+            if(Category::whereKey($request->category_id)->get()->isEmpty()) {
+                return redirect('/');
+            }
+
+            $data = $request->only(['item_name','category_id','description']);
+
             $file = $request->file('file');
             $disk = Storage::disk('public_uploads');
     
@@ -52,7 +63,12 @@ class InstructionsController extends Controller {
 
             $data['file'] = '/uploads/' . $fileUrl;
             $inst = Instructions::create($data);
-            return redirect('/');
+
+            if(Auth::user()->is_admin) {
+                return redirect('/redirect')->withErrors(['message' => 'Вы успешно добавили инструкцию!']);
+            } else {
+                return redirect('/redirect')->withErrors(['message' => 'Инструкция загружена! Она появится в поиске в ближайшее время!']);
+            }
         } 
         
         return redirect('/register')->withErrors(['message' => 'Для добавления собственных инструкций Вы должны быть авторизированны!']);
@@ -64,10 +80,12 @@ class InstructionsController extends Controller {
             $item = Instructions::whereKey($id)->first();
 
             if($item) {
-                return view('pages/instruction-view')->with('item',$item);
+                if($item->accepted || Auth::user()->is_admin) {
+                    return view('pages/instruction-view')->with('item',$item);
+                }
             }
         }
-        return redirect('/');
+        return redirect('/redirect');
     }
     public function delete(Request $request) {
         if(Auth::user() && Auth::user()->is_admin) {

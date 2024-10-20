@@ -20,7 +20,7 @@ class ComplaintsController extends Controller
             $data['uploader_id'] = Auth::user()->id;
 
             Complaints::create($data);
-            return redirect('/');
+            return redirect('/redirect')->withErrors(['message' => 'Ваша жалоба отправлена!']);
         } 
         
         return redirect('/register')->withErrors(['message' => 'Чтобы пожаловаться Вы должны быть авторизированны!']);

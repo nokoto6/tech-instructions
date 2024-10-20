@@ -1,4 +1,6 @@
 @php
+    use App\Models\Category;
+
     $page = app('request')->input('page');
     $filter = app('request')->input('filter');
 
@@ -10,69 +12,124 @@
         'all' => 'Все',
         'accepted' => 'Одобренные',
         'notaccepted' => 'Неодобренные'
-    ]
+    ];
+
+    if( $instructions ) {
+        $pageCount = ceil($instructions->total() / $instructions->perPage());
+        $pagination = getPagination($page, $pageCount);
+        $onEachSide = count($pagination);
+    }
 @endphp
 
 @extends("pages/admin-panel")
 
 @section("admin-content")
     @if(isset($filterNav) && isset($filterNav[$filter]) ) 
-        <h1 class="mb_20">{{ $filterNav[$filter] }} инструкции</h1>
+        <h1 class="main-title">{{ $filterNav[$filter] }} инструкции</h1>
     @endif
-    <a class="simple-input simple-input__button simple-input__link" href="{{ route('instruction-form') }}">Создать инструкцию</a> <br>
-    <table class="instruction-list">
-        <tr class="instruction-head">
-            <th class="instruction-item_any" style="width:5%">Id</th>
-            <th class="instruction-item_any" style="width:25%">Название техники</th>
-            <th class="instruction-item_any">Описание</th>
-            <th class="instruction-item_any" style="width:5%">Дата добавления</th>
-            <th class="instruction-item_any" style="width:5%">*</th>
-            <th class="instruction-item_any" style="width:5%">*</th>
-        </tr>
-        @foreach($instructions as $item)
-            <tr class="instruction-item" onclick="window.location='{{ route('instruction-view', ['id' => $item->id]) }}';">
-                <td class="instruction-item_any instruction-item_descr">{{ $item->id }}</td>
-                <td class="instruction-item_any instruction-item_name">{{ $item->item_name }}</td>
-                <td class="instruction-item_any instruction-item_descr">
-                    <div class="description-show">
-                        {{ $item->description }}
-                    </div>
-                </td>
-                <td class="instruction-item_any instruction-item_date">{{ $item->created_at->format('d.m.Y') }}</td>
-                <td>
-                    @if(!$item->accepted)
-                        <form method="post" action="{{ route('instruction-accept', ['id' => $item->id]) }}">
-                            @csrf
-                            <input 
-                                class="simple-input simple-input__button simple-input__link simple-input__small" 
-                                type="submit" 
-                                name="submit" 
-                                value="Одобрить">
-                        </form>
-                    @endif
-                </td>
-                <td>
-                    <form method="post" action="{{ route('instruction-delete', ['id' => $item->id]) }}">
-                        @csrf
-                        <input 
-                            class="simple-input simple-input__button simple-input__link simple-input__red simple-input__small" 
-                            type="submit" 
-                            name="submit" 
-                            value="Удалить">
-                    </form>
-                </td>
-            </tr>
-        @endforeach
-    </table>
+    
+    <a class="cute-button-link" href="{{ route('instruction-form') }}">Создать инструкцию</a>
 
     @if ($instructions->total() > $instructions->perPage())
-        <div class="paginate-selector-container">
-            @if ($page > 1)
-                <a class="simple-input simple-input__button simple-input__link" href="{{ route('admin-instructions', ['filter' => $filter, 'page' => $page-1]) }}"><-</a>
+        <div class="paginate_container">
+            @if ( $pageCount > 5 && $page > 3 )
+                <a class="cute-paginate-box" href="{{ route('admin-instructions', ['filter' => $filter, 'page' => 1]) }}">
+                    <div class="cute-paginate-box__text">1</div>
+                </a>
+                <div class="paginate-dots">
+                    <div class="cute-paginate-box__symbol material-symbols-rounded">more_horiz</div>
+                </div>
             @endif
-            <span>{{ $page }} из {{ ceil($instructions->total() / $instructions->perPage()) }}</span>
-            @if ($instructions->hasMorePages())
-                <a class="simple-input simple-input__button simple-input__link" href="{{ route('admin-instructions', ['filter' => $filter, 'page' => $page+1]) }}">-></a>
+            
+            @foreach($pagination as $pageNum)
+                <a class="cute-paginate-box @if ($pageNum == $page) cute-paginate-box_active @endif" href="{{ route('admin-instructions', ['filter' => $filter, 'page' => $pageNum]) }}">
+                    <div class="cute-paginate-box__text">{{$pageNum}}</div>
+                </a>
+            @endforeach
+            
+            @if ( $pageCount > 5 && ($pageCount - $page) > 2  )
+                <div class="paginate-dots">
+                    <div class="cute-paginate-box__symbol material-symbols-rounded">more_horiz</div>
+                </div>
+                <a class="cute-paginate-box" href="{{ route('admin-instructions', ['filter' => $filter, 'page' => $pageCount]) }}">
+                    <div class="cute-paginate-box__text">{{$pageCount}}</div>
+                </a>
+            @endif
+        </div>
+    @endif
+
+    <ul class="cards-list">
+        @foreach($instructions as $item)
+            <li class="cute-border__template cards-item">
+                <div class="instruction-item__text-container">
+                    <a href="/" class="instruction-item__text instruction-item__category">
+                        {{ Category::whereKey($item->category_id)->get()->first()->item_name }}
+                    </a>
+                    <span class="instruction-item__text instruction-item__name">
+                        #{{$item->id}} | {{$item->item_name}}
+                    </span>
+                    <span class="instruction-item__text instruction-item__description">
+                        {{$item->description}}
+                    </span>
+                    <span class="instruction-item__text instruction-item__description">
+                        Создано {{$item->created_at->format('d.m.Y')}}
+                    </span>
+                    <div class="instriction-item__admin-button-container">
+                        @if(!$item->accepted)
+                            <form method="post" action="{{ route('instruction-accept', ['id' => $item->id]) }}">
+                                @csrf
+                                <input 
+                                    class="cute-button-form cute-button-form_small" 
+                                    type="submit" 
+                                    name="submit" 
+                                    value="Одобрить">
+                            </form>
+                        @endif
+                    </div>
+                    <div class="instriction-item__admin-button-container">
+                        <form method="post" action="{{ route('instruction-delete', ['id' => $item->id]) }}">
+                            @csrf
+                            <input 
+                                class="cute-button-form cute-button-form_small cute-button-form_red" 
+                                type="submit" 
+                                name="submit" 
+                                value="Удалить">
+                        </form>
+                    </div>
+                </div>
+                <a href="{{route('instruction-view', ['id'=>$item->id])}}" class="instruction-item__symbol-container">
+                    <span class="material-symbols-rounded cute-border__symbol">
+                        arrow_forward_ios
+                    </span>
+                </a>
+            </li>
+        @endforeach
+    </ul>
+
+    @if ($instructions->total() > $instructions->perPage())
+        <div class="paginate_container">
+            @if ( $pageCount > 5 && $page > 3 )
+                <a class="cute-paginate-box" href="{{ route('admin-instructions', ['filter' => $filter, 'page' => 1]) }}">
+                    <div class="cute-paginate-box__text">1</div>
+                </a>
+                <div class="paginate-dots">
+                    <div class="cute-paginate-box__symbol material-symbols-rounded">more_horiz</div>
+                </div>
+            @endif
+            
+            @foreach($pagination as $pageNum)
+                <a class="cute-paginate-box @if ($pageNum == $page) cute-paginate-box_active @endif" href="{{ route('admin-instructions', ['filter' => $filter, 'page' => $pageNum]) }}">
+                    <div class="cute-paginate-box__text">{{$pageNum}}</div>
+                </a>
+            @endforeach
+            
+            @if ( $pageCount > 5 && ($pageCount - $page) > 2  )
+                <div class="paginate-dots">
+                    <div class="cute-paginate-box__symbol material-symbols-rounded">more_horiz</div>
+                </div>
+                <a class="cute-paginate-box" href="{{ route('admin-instructions', ['filter' => $filter, 'page' => $pageCount]) }}">
+                    <div class="cute-paginate-box__text">{{$pageCount}}</div>
+                </a>
             @endif
         </div>
     @endif

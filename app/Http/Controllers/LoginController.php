@@ -68,7 +68,7 @@ class LoginController extends Controller
             } else {
                 return redirect('admin-panel/users');
             }
-            return back();
+            return redirect('/redirect')->withErrors(['message' => 'Вы успешно зарегистрировались!']);
         };
 
         return back()->withErrors(['message' => 'Такой email уже зарегистрирован!']);  
@@ -102,7 +102,7 @@ class LoginController extends Controller
             // если не нашло юзера
         };
 
-        return redirect('/');
+        return redirect('/redirect')->withErrors(['message' => 'Вы успешно авторизировались!']);
     }
 
     public function logout(Request $request) {

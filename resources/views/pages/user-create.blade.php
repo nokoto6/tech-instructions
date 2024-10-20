@@ -1,5 +1,7 @@
 @extends("body")
 
+@section('title', 'Создать пользователя')
+
 @section("content")
     <a class="simple-input simple-input__button simple-input__link" href="{{url()->previous("/foo")}}">Назад</a>
 

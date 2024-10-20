@@ -18,7 +18,7 @@
         ],
         [
             "name"  => "Поиск",
-            "link"  => route('login'),
+            "link"  => route('results'),
             "symbol"   => "search"
         ],
         [
@@ -66,14 +66,14 @@
 <header class="header">
     <ul class="header__list">
         @if (Auth::user())
-            <a class="user__container">
+            <a href="{{route('redirect')}}" class="user__container">
                 <img class="user__logo" src="/images/avatar-placeholder.png"/>
                 <span class="user__name">{{Auth::user()->name}}</span>
             </a>
         @else
             <a href="{{route('login')}}" class="user__container">
                 <img class="user__logo" src="/images/avatar-placeholder.png"/>
-                <span class="user__name">Авторизация</span>
+                <span class="user__name">Войти</span>
             </a>
         @endif
 

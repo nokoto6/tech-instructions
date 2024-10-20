@@ -4,55 +4,106 @@
 
     if(!isset($complaints)) { $complaints = []; }
     if(!isset($page)) { $page = 1; }
+
+    if( $complaints ) {
+        $pageCount = ceil($complaints->total() / $complaints->perPage());
+        $pagination = getPagination($page, $pageCount);
+        $onEachSide = count($pagination);
+    }
 @endphp
 
 @extends("pages/admin-panel")
 
 @section("admin-content")
-    <h1 class="mb_20">Жалобы на инструкции</h1>
+    <h1 class="main-title">Жалобы на инструкции</h1>
 
-    <table class="instruction-list">
-        <tr class="instruction-head">
-            <th class="instruction-item_any" style="width:5%">Id</th>
-            <th class="instruction-item_any" style="width:35%">Описание</th>
-            <th class="instruction-item_any" style="width:5%">Id инструкции</th>
-            <th class="instruction-item_any" style="width:7%">Id пожаловавшегося</th>
-            <th class="instruction-item_any" style="width:5%">Дата добавления</th>
-            <th class="instruction-item_any" style="width:5%">*</th>
-        </tr>
-        @foreach($complaints as $item)
-            <tr class="instruction-item" onclick="window.location='{{ route('instruction-view', ['id' => $item->instruction_id]) }}';">
-                <td class="instruction-item_any instruction-item_descr">{{ $item->id }}</td>
-                <td class="instruction-item_any instruction-item_name">
-                    <div class="description-show">
-                        {{ $item->description }}
-                    </div>
-                </td>
-                <td class="instruction-item_any instruction-item_descr">{{ $item->instruction_id }}</td>
-                <td class="instruction-item_any instruction-item_descr">{{ $item->uploader_id }}</td>
-                <td class="instruction-item_any instruction-item_date">{{ $item->created_at->format('d.m.Y') }}</td>
-                <td>
+    @if ($complaints->total() > $complaints->perPage())
+        <div class="paginate_container">
+            @if ( $pageCount > 5 && $page > 3 )
+                <a class="cute-paginate-box" href="{{ route('admin-complaints', ['page' => 1]) }}">
+                    <div class="cute-paginate-box__text">1</div>
+                </a>
+                <div class="paginate-dots">
+                    <div class="cute-paginate-box__symbol material-symbols-rounded">more_horiz</div>
+                </div>
+            @endif
+            
+            @foreach($pagination as $pageNum)
+                <a class="cute-paginate-box @if ($pageNum == $page) cute-paginate-box_active @endif" href="{{ route('admin-complaints', ['page' => $pageNum]) }}">
+                    <div class="cute-paginate-box__text">{{$pageNum}}</div>
+                </a>
+            @endforeach
+            
+            @if ( $pageCount > 5 && ($pageCount - $page) > 2  )
+                <div class="paginate-dots">
+                    <div class="cute-paginate-box__symbol material-symbols-rounded">more_horiz</div>
+                </div>
+                <a class="cute-paginate-box" href="{{ route('admin-complaints', ['page' => $pageCount]) }}">
+                    <div class="cute-paginate-box__text">{{$pageCount}}</div>
+                </a>
+            @endif
+        </div>
+    @endif
+
+    @if (count($complaints)) 
+        <ul class="cards-list">
+            @foreach($complaints as $item)
+                <li class="cute-border__template cards-item cards-item_admin">
+                    <span class="admin-cards__text admin-cards__text_name">
+                        ID жалобы: {{ $item->id }}
+                    </span>
+                    <span class="admin-cards__text admin-cards__text_email">
+                        Описание: {{ $item->description }}
+                    </span>
+                    <span class="admin-cards__text admin-cards__text_date">
+                        Жалоба создана {{ $item->created_at->format('d.m.Y') }}
+                    </span>
+                    <span class="admin-cards__text admin-cards__text_date">
+                        ID пожаловавшегося: {{ $item->uploader_id }}
+                    </span>
+                    <span class="admin-cards__text admin-cards__text_date">
+                        ID инструкции: {{ $item->instruction_id }}
+                    </span>
+                    <a class="cute-button-link" href="{{route('instruction-view', ['id'=>$item->instruction_id])}}">Перейти к инструкции</a>
                     <form method="post" action="{{ route('complaint-delete', ['id' => $item->id]) }}">
                         @csrf
                         <input 
-                            class="simple-input simple-input__button simple-input__link simple-input__red simple-input__small" 
+                            class="cute-button-form cute-button-form_small cute-button-form_red" 
                             type="submit" 
                             name="submit" 
                             value="Удалить">
                     </form>
-                </td>
-            </tr>
-        @endforeach
-    </table>
+                </li>
+            @endforeach
+        </ul>
+    @else
+        <span>Список пуст</span>
+    @endif
 
     @if ($complaints->total() > $complaints->perPage())
-        <div class="paginate-selector-container">
-            @if ($page > 1)
-                <a class="simple-input simple-input__button simple-input__link" href="{{ route('admin-complaints', ['page' => $page-1]) }}"><-</a>
+        <div class="paginate_container">
+            @if ( $pageCount > 5 && $page > 3 )
+                <a class="cute-paginate-box" href="{{ route('admin-complaints', ['page' => 1]) }}">
+                    <div class="cute-paginate-box__text">1</div>
+                </a>
+                <div class="paginate-dots">
+                    <div class="cute-paginate-box__symbol material-symbols-rounded">more_horiz</div>
+                </div>
             @endif
-            <span>{{ $page }} из {{ ceil($complaints->total() / $complaints->perPage()) }}</span>
-            @if ($complaints->hasMorePages())
-                <a class="simple-input simple-input__button simple-input__link" href="{{ route('admin-complaints', ['page' => $page+1]) }}">-></a>
+            
+            @foreach($pagination as $pageNum)
+                <a class="cute-paginate-box @if ($pageNum == $page) cute-paginate-box_active @endif" href="{{ route('admin-complaints', ['page' => $pageNum]) }}">
+                    <div class="cute-paginate-box__text">{{$pageNum}}</div>
+                </a>
+            @endforeach
+            
+            @if ( $pageCount > 5 && ($pageCount - $page) > 2  )
+                <div class="paginate-dots">
+                    <div class="cute-paginate-box__symbol material-symbols-rounded">more_horiz</div>
+                </div>
+                <a class="cute-paginate-box" href="{{ route('admin-complaints', ['page' => $pageCount]) }}">
+                    <div class="cute-paginate-box__text">{{$pageCount}}</div>
+                </a>
             @endif
         </div>
     @endif

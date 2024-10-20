@@ -9,68 +9,116 @@
     $filterNav = [
         'active' => 'Активные',
         'blocked' => 'Заблокированные'
-    ]
+    ];
+
+    if( $users ) {
+        $pageCount = ceil($users->total() / $users->perPage());
+        $pagination = getPagination($page, $pageCount);
+        $onEachSide = count($pagination);
+    }
 @endphp
 
 @extends("pages/admin-panel")
 
 @section("admin-content")
     @if(isset($filterNav) && isset($filterNav[$filter]) ) 
-        <h1 class="mb_20">{{ $filterNav[$filter] }} пользователи</h1>
+        <h1 class="main-title">{{ $filterNav[$filter] }} пользователи</h1>
     @endif
-    <a class="simple-input simple-input__button simple-input__link" href="{{ route('user-create') }}">Добавить пользователя</a> <br>
-    <table class="instruction-list">
-    <tr class="instruction-head">
-        <th class="instruction-item_any" style="width:5%">Id</th>
-        <th class="instruction-item_any">Почта</th>
-        <th class="instruction-item_any" style="width:15%">Имя</th>
-        <th class="instruction-item_any" style="width:5%">Создан</th>
-        <th class="instruction-item_any" style="width:5%">*</th>
-        <th class="instruction-item_any" style="width:5%">*</th>
-    </tr>
-    @foreach($users as $user)
-        <tr class="instruction-item">
-            <td class="instruction-item_any instruction-item_descr">{{ $user->id }}</td>
-            <td class="instruction-item_any instruction-item_name">{{ $user->email }}</td>
-            <td class="instruction-item_any instruction-item_descr">{{ $user->name }}</td>
-            <td class="instruction-item_any instruction-item_date">{{ $user->created_at->format('d.m.Y') }}</td>
-            <td>
-                <form method="post" action="{{ route('user-block', ['id' => $user->id, 'block' => !$user->blocked]) }}">
-                    @csrf
-                    <input 
-                        class="simple-input simple-input__button simple-input__link simple-input__red simple-input__small" 
-                        type="submit" 
-                        name="submit" 
-                        value="@if ($user->blocked)
-                            Разблокировать
-                        @else
-                            Заблокировать
-                        @endif">
-                </form>
-            </td>
-            <td>
-                <form method="post" action="{{ route('user-delete', ['id' => $user->id]) }}">
-                    @csrf
-                    <input 
-                        class="simple-input simple-input__button simple-input__link simple-input__red simple-input__small" 
-                        type="submit" 
-                        name="submit" 
-                        value="Удалить">
-                </form>
-            </td>
-        </tr>
-    @endforeach
-</table>
 
     @if ($users->total() > $users->perPage())
-    <div class="paginate-selector-container">
-        @if ($page > 1)
-            <a class="simple-input simple-input__button simple-input__link" href="{{ route('admin-users', ['filter' => $filter, 'page' => $page-1]) }}"><-</a>
-        @endif
-        <span>{{ $page }} из {{ ceil($users->total() / $users->perPage()) }}</span>
-        @if ($users->hasMorePages())
-            <a class="simple-input simple-input__button simple-input__link" href="{{ route('admin-users', ['filter' => $filter, 'page' => $page+1]) }}">-></a>
-        @endif
-    </div>
+        <div class="paginate_container">
+            @if ( $pageCount > 5 && $page > 3 )
+                <a class="cute-paginate-box" href="{{ route('admin-users', ['filter' => $filter, 'page' => 1]) }}">
+                    <div class="cute-paginate-box__text">1</div>
+                </a>
+                <div class="paginate-dots">
+                    <div class="cute-paginate-box__symbol material-symbols-rounded">more_horiz</div>
+                </div>
+            @endif
+            
+            @foreach($pagination as $pageNum)
+                <a class="cute-paginate-box @if ($pageNum == $page) cute-paginate-box_active @endif" href="{{ route('admin-users', ['filter' => $filter, 'page' => $pageNum]) }}">
+                    <div class="cute-paginate-box__text">{{$pageNum}}</div>
+                </a>
+            @endforeach
+            
+            @if ( $pageCount > 5 && ($pageCount - $page) > 2  )
+                <div class="paginate-dots">
+                    <div class="cute-paginate-box__symbol material-symbols-rounded">more_horiz</div>
+                </div>
+                <a class="cute-paginate-box" href="{{ route('admin-users', ['filter' => $filter, 'page' => $pageCount]) }}">
+                    <div class="cute-paginate-box__text">{{$pageCount}}</div>
+                </a>
+            @endif
+        </div>
+    @endif
+
+    <ul class="cards-list">
+        @foreach($users as $item)
+            <li class="cute-border__template cards-item cards-item_admin">
+                <div class="admin-cards__user-container">
+                    <div>
+                        <img class="user__logo" src="/images/avatar-placeholder.png"/>
+                    </div>
+                    <div class="cards-item_admin">
+                        <span class="admin-cards__text admin-cards__text_name">
+                            #{{ $item->id }} | {{ $item->name }}
+                        </span>
+                        <span class="admin-cards__text admin-cards__text_email">
+                            E-Mail: {{ $item->email }}
+                        </span>
+                        <span class="admin-cards__text admin-cards__text_date">
+                            Создан {{ $item->created_at->format('d.m.Y') }}
+                        </span>
+                    </div>
+                </div>
+                @if(!$item->is_admin)
+                    <form method="post" action="{{ route('user-block', ['id' => $item->id, 'block' => !$item->blocked]) }}">
+                        @csrf
+                        <input 
+                            class="cute-button-form cute-button-form_small" 
+                            type="submit" 
+                            name="submit" 
+                            value="@if ($item->blocked) Разблокировать @else Заблокировать @endif">
+                    </form>
+                    <form method="post" action="{{ route('user-delete', ['id' => $item->id]) }}">
+                        @csrf
+                        <input 
+                            class="cute-button-form cute-button-form_small cute-button-form_red" 
+                            type="submit" 
+                            name="submit" 
+                            value="Удалить">
+                    </form>
+                @endif
+            </li>
+        @endforeach
+    </ul>
+
+    @if ($users->total() > $users->perPage())
+        <div class="paginate_container">
+            @if ( $pageCount > 5 && $page > 3 )
+                <a class="cute-paginate-box" href="{{ route('admin-users', ['filter' => $filter, 'page' => 1]) }}">
+                    <div class="cute-paginate-box__text">1</div>
+                </a>
+                <div class="paginate-dots">
+                    <div class="cute-paginate-box__symbol material-symbols-rounded">more_horiz</div>
+                </div>
+            @endif
+            
+            @foreach($pagination as $pageNum)
+                <a class="cute-paginate-box @if ($pageNum == $page) cute-paginate-box_active @endif" href="{{ route('admin-users', ['filter' => $filter, 'page' => $pageNum]) }}">
+                    <div class="cute-paginate-box__text">{{$pageNum}}</div>
+                </a>
+            @endforeach
+            
+            @if ( $pageCount > 5 && ($pageCount - $page) > 2  )
+                <div class="paginate-dots">
+                    <div class="cute-paginate-box__symbol material-symbols-rounded">more_horiz</div>
+                </div>
+                <a class="cute-paginate-box" href="{{ route('admin-users', ['filter' => $filter, 'page' => $pageCount]) }}">
+                    <div class="cute-paginate-box__text">{{$pageCount}}</div>
+                </a>
+            @endif
+        </div>
     @endif
 @endsection

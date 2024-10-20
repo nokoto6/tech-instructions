@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Complaints;
 use App\Models\Instructions;
 use App\Models\User;
+use App\Models\Category;
 use DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,7 +17,7 @@ class AdminPanelController extends Controller
     }
     public function instructions(Request $request) {
         if(Auth::user() && Auth::user()->is_admin) {
-            $max_items = 20;
+            $max_items = 21;
 
             $filter = $request->filter;
             $page = $request->page;
@@ -33,14 +34,14 @@ class AdminPanelController extends Controller
                 }
             }
 
-            return view('pages/admin/instructions', ['instructions' => $instructions->paginate($max_items,['*'],'page',$page)]);
+            return view('pages/admin/instructions', ['instructions' => $instructions->orderBy('id', 'desc')->paginate($max_items,['*'],'page',$page)]);
         }
 
         return redirect('/');
     }
     public function users(Request $request) {
         if(Auth::user() && Auth::user()->is_admin) {
-            $max_items = 20;
+            $max_items = 21;
 
             $filter = $request->filter;
             $page = $request->page;
@@ -51,21 +52,29 @@ class AdminPanelController extends Controller
                 $users = User::where(['blocked' => false]);
             }
 
-            return view('pages/admin/users', ['users' => $users->paginate($max_items,['*'],'page',$page)]);
+            return view('pages/admin/users', ['users' => $users->orderBy('id', 'desc')->paginate($max_items,['*'],'page',$page)]);
         }
 
         return redirect('/');
     }
     public function complaints(Request $request) {
         if(Auth::user() && Auth::user()->is_admin) {
-            $max_items = 20;
+            $max_items = 21;
             $page = $request->page;
 
             if(!Complaints::count()) { return view('pages/admin/complaints', ['complaints' => Complaints::paginate($max_items,['*'],'page',$page)]); }
 
             $complaints = Complaints::get()->toQuery();
 
-            return view('pages/admin/complaints', ['complaints' => $complaints->paginate($max_items,['*'],'page',$page)]);
+            return view('pages/admin/complaints', ['complaints' => $complaints->orderBy('id', 'desc')->paginate($max_items,['*'],'page',$page)]);
+        }
+
+        return redirect('/');
+    }
+
+    public function categories(Request $request) {
+        if(Auth::user() && Auth::user()->is_admin) {
+            return view('pages/admin/categories', ['categories' => Category::get()]);
         }
 
         return redirect('/');

@@ -1,65 +1,67 @@
 @php
     use App\Models\User;
+    use App\Models\Category;
+
+    $categories = Category::get();
+    if( !$categories ) { $categories = []; }
 @endphp
 
 @extends("body")
 
+@section('title', 'Инструкция к ' . $item->item_name)
+
 @section("content")
-    <a class="simple-input simple-input__button simple-input__link" href="{{url()->previous("/foo")}}">Назад</a>
+    <a class="cute-button-link" href="{{url()->previous("/foo")}}">Назад</a>
 
-    <div class="item_view-container">
-        <h1>Инструкция для {{ $item->item_name }}</h1>
+    <div class="view-container">
+        <h1 class="main-title">Инструкция к {{ $item->item_name }}</h1>
 
-        <div>
-            <b><span>Описание: </span></b>
-            <div class="description-show">{{ $item->description }}</div>
+        <div class="item-view__container">
+
+            <div>
+                <span class="cute-bold-text">Категория устройства: </span>
+                <span>
+                    {{ Category::whereKey($item->category_id)->get()->first()->item_name }}
+                </span>
+            </div>
+
+            @if ($item->description)
+                <div>
+                    <span class="cute-bold-text">Описание: </span>
+                    <div class="item__description">{{ $item->description }}</div>
+                </div>
+            @endif
+
+            <div>
+                <span class="cute-bold-text">Инструкцию выложил: </span>
+                <span>{{ User::where(['id' => $item->uploader_id])->first()->name }}</span>
+            </div>
+            
+            <iframe class="item_view-iframe" src="{{ $item['file'] }}" seamless></iframe>
+
+            <a class="cute-button-link" href="{{ $item['file'] }}" target=”_blank” type="submit">Открыть файл в новой вкладке</a>
+            <a class="cute-button-link" href="{{ $item['file'] }}" download type="submit">Скачать файл</a>
         </div>
 
-        <div>
-            <b><span>Выложил: </span></b>
-            <span>{{ User::where(['id' => $item->uploader_id])->first()->name }}</span>
-        </div>
-        
-        <iframe class="item_view-iframe" src="{{ $item['file'] }}" height="800px" width="550px" seamless></iframe>
+        <div class="complaints__container">
+            <div class="complaints-help__container">
+                <h3 class="complaints-help__text">С инструкцией что-то не так? Отправьте жалобу, администрация рассмотрит Ваш вопрос в ближайшее время</h3>
+            </div>
 
-        <a class="simple-input simple-input__button simple-input__link" href="{{ $item['file'] }}" target=”_blank” type="submit">Открыть файл в новой вкладке</a>
-        <a class="simple-input simple-input__button simple-input__link" href="{{ $item['file'] }}" download type="submit">Скачать файл</a>
-        <button class="simple-input simple-input__button simple-input__link simple-input__red" id="modalOpen">Пожаловаться</button>
+            <div class="complaints-content">
+                <div class="complaints-header__container">
+                    <span class="complaints-close">&times;</span>
+                    <h2 class="complaints-title">Отправить жалобу</h2>
+                </div>
+                <form 
+                    method="POST" 
+                    action="{{ route('complaint-create', ['instruction_id'=>$item->id]) }}"
+                >
+                    @csrf
+                    <textarea class="cute-input-text__textarea" maxlength="255" name="description" placeholder="Описание" required></textarea>
+                    <button class="cute-button-form" type="submit">Отправить</button>
+                </form>
+            </div>
+        </div>
     </div>
-
-    <div id="myModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h1>Отправить жалобу</h1>
-            <form 
-                method="POST" 
-                action="{{ route('complaint-create', ['instruction_id'=>$item->id]) }}"
-            >
-                @csrf
-                <textarea class="simple-input simple-input__fillable simple-input__area" maxlength="255" name="description" placeholder="Описание" required></textarea>
-                <div class="auth-border"></div>
-                <button class="simple-input simple-input__button" type="submit">Отправить</button>
-            </form>
-        </div>
-    </div>
-
-    <script>
-        var modal = document.getElementById("myModal");
-        var btn = document.getElementById("modalOpen");
-        var span = document.getElementsByClassName("close")[0];
-
-        btn.onclick = function() {
-            modal.style.display = "block";
-        }
-
-        span.onclick = function() {
-            modal.style.display = "none";
-        }
-
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
-    </script>
 @endsection

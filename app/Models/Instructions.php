@@ -14,6 +14,7 @@ class Instructions extends Model
         'description',
         'file',
         'uploader_id',
-        'accepted'
+        'accepted',
+        'category_id'
     ];
 }

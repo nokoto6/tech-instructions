@@ -11,7 +11,9 @@ use Illuminate\Support\Facades\Route;
 
 App::setLocale('ru');
 
-Route::get('/', [InstructionsController::class, 'list'])->name('main');
+Route::view('/', 'body')->name('main');
+
+Route::view('/redirect', 'pages/redirect')->name('redirect');
 
 Route::get('/login', [LoginController::class, 'login'])->name('login');
 Route::get('/register', [LoginController::class, 'register'])->name('register');
@@ -22,6 +24,8 @@ Route::post('/register', [LoginController::class, 'registerCreate'])->name('regi
 Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::get('/categories', [CategoryController::class, 'view'])->name('categories');
+
+Route::get('/results', [InstructionsController::class, 'results'])->name('results');
 
 Route::get('/instruction-form', [InstructionsController::class, 'form'])->name('instruction-form');
 Route::get('/instruction-view', [InstructionsController::class, 'view'])->name('instruction-view');
@@ -34,6 +38,7 @@ Route::get('/admin-panel', [AdminPanelController::class, 'panel'])->name('admin-
 Route::get('/admin-panel/instructions', [AdminPanelController::class, 'instructions'])->name('admin-instructions');
 Route::get('/admin-panel/users', [AdminPanelController::class, 'users'])->name('admin-users');
 Route::get('/admin-panel/complaints', [AdminPanelController::class, 'complaints'])->name('admin-complaints');
+Route::get('/admin-panel/categories', [AdminPanelController::class, 'categories'])->name('admin-categories');
 
 Route::get('/user/create', [LoginController::class, 'create'])->name('user-create');
 Route::post('/user/delete', [LoginController::class, 'delete'])->name('user-delete');
@@ -41,3 +46,7 @@ Route::post('/user/block', [LoginController::class, 'block'])->name('user-block'
 
 Route::post('/complaint/create', [ComplaintsController::class, 'create'])->name('complaint-create');
 Route::post('/complaint/delete', [ComplaintsController::class, 'delete'])->name('complaint-delete');
+
+Route::get('/category/form', [CategoryController::class, 'form'])->name('category-form');
+Route::post('/category/create', [CategoryController::class, 'create'])->name('category-create');
+Route::post('/category/delete', [CategoryController::class, 'delete'])->name('category-delete');
