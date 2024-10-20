@@ -115,6 +115,10 @@ a {
     text-align: center;
     margin-right: 40px;
     margin-left: 10px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .cute-border__template {
