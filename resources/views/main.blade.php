@@ -43,4 +43,4 @@
     </div>
 </div>
 
-<script src="/js/search.js"></script>
+<script src="/public/js/search.js"></script>

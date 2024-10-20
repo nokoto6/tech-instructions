@@ -151,6 +151,6 @@
         @endif
     </div>
 
-    <script src="/js/select.js"></script>
-    <script src="/js/search.js"></script>
+    <script src="/public/js/select.js"></script>
+    <script src="/public/js/search.js"></script>
 @endsection

@@ -4,10 +4,10 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <link rel="icon" type="image/x-icon" href="/favicon.ico">
-        <link rel="stylesheet" href="/css/template.css">
-        <link rel="stylesheet" href="/css/newstyle.css">
-        <link rel="stylesheet" href="/css/media.css">
+        <link rel="icon" type="image/x-icon" href={{ asset('/public/favicon.ico') }}>
+        <link rel="stylesheet" href="{{ asset('/public/css/template.css') }}">
+        <link rel="stylesheet" href="{{ asset('/public/css/newstyle.css') }}">
+        <link rel="stylesheet" href="{{ asset('/public/css/media.css') }}">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
         @hasSection('title') <title>@yield('title')</title> @else <title>Главная</title> @endif
         <x-captcha-js />
@@ -38,7 +38,7 @@
             @show
         </div>
 
-        <script src="/js/header.js"></script>
+        <script src="/public/js/header.js"></script>
         <style> body { display: block; } </style>
     </body>
 </html>

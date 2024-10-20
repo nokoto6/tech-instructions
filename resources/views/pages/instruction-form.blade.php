@@ -88,8 +88,8 @@
         <a class="cute-button-link" href="{{route('instruction-form')}}">Отменить отправку</a> <br/>
     </div>
 
-    <script src="/js/inputs.js"></script>
-    <script src="/js/select.js"></script>
+    <script src="/public/js/inputs.js"></script>
+    <script src="/public/js/select.js"></script>
 
     <script>
         function submit() {

@@ -58,7 +58,7 @@
             <li class="cute-border__template cards-item cards-item_admin">
                 <div class="admin-cards__user-container">
                     <div>
-                        <img class="user__logo" src="/images/avatar-placeholder.png"/>
+                        <img class="user__logo" src="/public/images/avatar-placeholder.png"/>
                     </div>
                     <div class="cards-item_admin">
                         <span class="admin-cards__text admin-cards__text_name">

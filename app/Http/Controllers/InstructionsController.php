@@ -61,7 +61,7 @@ class InstructionsController extends Controller {
             $data['uploader_id'] = Auth::user()->id;
             $data['accepted'] = !!Auth::user()->is_admin;
 
-            $data['file'] = '/uploads/' . $fileUrl;
+            $data['file'] = '/public/uploads/' . $fileUrl;
             $inst = Instructions::create($data);
 
             if(Auth::user()->is_admin) {

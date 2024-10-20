@@ -70,6 +70,6 @@
         </form>
     </div>
 
-    <script src="/js/inputs.js"></script>
-    <script src="/js/input-symbol-repeater.js"></script>
+    <script src="/public/js/inputs.js"></script>
+    <script src="/public/js/input-symbol-repeater.js"></script>
 @endsection

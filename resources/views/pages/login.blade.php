@@ -38,5 +38,5 @@
         </form>
     </div>
 
-    <script src="/js/inputs.js"></script>
+    <script src="/public/js/inputs.js"></script>
 @endsection

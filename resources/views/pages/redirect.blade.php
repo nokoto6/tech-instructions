@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta http-equiv="refresh" content="4.9;url={{route('main')}}"/>
-    <link rel="stylesheet" href="/css/redirect.css">
+    <link rel="stylesheet" href={{ asset('/public/css/redirect.css') }}>
     <title>Перенаправление</title>
 </head>
     <body>
@@ -39,7 +39,7 @@
         </span>
         <a class="cute-button-link" href="{{route('main')}}">Перейти на главную</a>
 
-        <script src="/js/redirect.js"></script>
+        <script src="/public/js/redirect.js"></script>
 
         <style> body { display: flex; } </style>
     </body>
