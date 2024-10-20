@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Route;
 
 App::setLocale('ru');
 
+// Миддлвейры к сожалению не успел добавить, добавлю чуть позже, хотел обернуть в милды все роуты, так же нужно добавить ограничение запросов в минуту
+
 Route::view('/', 'body')->name('main');
 
 Route::view('/redirect', 'pages/redirect')->name('redirect');
